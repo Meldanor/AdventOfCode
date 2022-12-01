@@ -2,6 +2,7 @@
   "name": "aoc_2022",
   "displayName": "Advent of Code 2022",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "prestart": "tsc",
     "start": "node build/index.js"
