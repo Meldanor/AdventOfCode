@@ -5,6 +5,7 @@ interface Accumulator {
   current: string[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function run(args: string[]): Promise<void> {
   const content = await readInput('src/01/input.txt');
   const groups = content.reduce(
