@@ -12,18 +12,24 @@ enum MY_CHOICE {
   SCISSORS = 'Z'
 }
 
-type OthersChoiceMap = {
+enum MY_STRATEGY {
+  LOSE = 'X',
+  DRAW = 'Y',
+  WIN = 'Z'
+}
+
+type ChoiceMap = {
   [key: string]: number;
 };
 
-const choiceValue: OthersChoiceMap = {
+const choiceValue: ChoiceMap = {
   [MY_CHOICE.ROCK]: 1,
   [MY_CHOICE.PAPER]: 2,
   [MY_CHOICE.SCISSORS]: 3
 };
 
 type OutcomeMap = {
-  [key: string]: OthersChoiceMap;
+  [key: string]: ChoiceMap;
 };
 
 const outcomeValue: OutcomeMap = {
@@ -44,19 +50,71 @@ const outcomeValue: OutcomeMap = {
   }
 };
 
+type StrategyMap = {
+  [key: string]: {
+    [key: string]: string;
+  };
+};
+
+const strategy: StrategyMap = {
+  [OTHERS_CHOICE.ROCK]: {
+    [MY_STRATEGY.LOSE]: MY_CHOICE.SCISSORS,
+    [MY_STRATEGY.DRAW]: MY_CHOICE.ROCK,
+    [MY_STRATEGY.WIN]: MY_CHOICE.PAPER
+  },
+  [OTHERS_CHOICE.PAPER]: {
+    [MY_STRATEGY.LOSE]: MY_CHOICE.ROCK,
+    [MY_STRATEGY.DRAW]: MY_CHOICE.PAPER,
+    [MY_STRATEGY.WIN]: MY_CHOICE.SCISSORS
+  },
+  [OTHERS_CHOICE.SCISSORS]: {
+    [MY_STRATEGY.LOSE]: MY_CHOICE.PAPER,
+    [MY_STRATEGY.DRAW]: MY_CHOICE.SCISSORS,
+    [MY_STRATEGY.WIN]: MY_CHOICE.ROCK
+  }
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function run(args: string[]): Promise<void> {
   const content = await readInput('src/02/input.txt');
-  const totalScore = content.reduce((acc: number, line: string): number => {
-    return acc + calculateOutcome(line);
-  }, 0);
-  console.log(`Your total score with this strategy is ${totalScore}`);
+  const totalScorePartOne = content.reduce(
+    (acc: number, line: string): number => {
+      return acc + calculatePartOneOutcome(line);
+    },
+    0
+  );
+  const totalScorePartTwo = content.reduce(
+    (acc: number, line: string): number => {
+      return acc + calculatePartTwoOutcome(line);
+    },
+    0
+  );
+  console.log(
+    `(Part 1): Your total score with this strategy is ${totalScorePartOne}`
+  );
+  console.log(
+    `(Part 2): Your total score with this strategy is ${totalScorePartTwo}`
+  );
 }
 
-function calculateOutcome(line: string): number {
+function calculatePartOneOutcome(line: string): number {
   const split = line.split(' ');
   const othersChoice = split[0];
   const myChoice = split[1];
+  const outcome = choiceValue[myChoice] + outcomeValue[othersChoice][myChoice];
+
+  // console.log(
+  //   `${othersChoice} vs. ${myChoice} (${choiceValue[myChoice]} + ${outcomeValue[othersChoice][myChoice]}) => ${outcome}`
+  // );
+  return outcome;
+}
+
+function calculatePartTwoOutcome(line: string): number {
+  const split = line.split(' ');
+  const othersChoice = split[0];
+
+  const myStrategy = split[1];
+  const myChoice = strategy[othersChoice][myStrategy];
   const outcome = choiceValue[myChoice] + outcomeValue[othersChoice][myChoice];
 
   // console.log(
