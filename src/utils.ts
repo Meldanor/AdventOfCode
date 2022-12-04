@@ -7,4 +7,17 @@ async function readInput(file: string): Promise<string[]> {
   return lines.slice(0, -1);
 }
 
-export { readInput };
+function range(size: number, startAt = 0) {
+  return [...Array(size).keys()].map((i) => i + startAt);
+}
+
+function chunk<T>(array: Array<T>, chunkSize: number): Array<Array<T>> {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    const chunk = array.slice(i, i + chunkSize);
+    chunks.push(chunk);
+  }
+  return chunks;
+}
+
+export { readInput, range, chunk };

@@ -1,4 +1,4 @@
-import { readInput } from '../utils.js';
+import { readInput, chunk, range } from '../utils.js';
 
 type PriorityMap = {
   [key: string]: number;
@@ -16,19 +16,6 @@ const priorityValues = range(52)
     acc[cur] = index + 1;
     return acc;
   }, {});
-
-function range(size: number, startAt = 0) {
-  return [...Array(size).keys()].map((i) => i + startAt);
-}
-
-function chunk<T>(array: Array<T>, chunkSize: number): Array<Array<T>> {
-  const chunks = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    const chunk = array.slice(i, i + chunkSize);
-    chunks.push(chunk);
-  }
-  return chunks;
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function run(args: string[]): Promise<void> {
