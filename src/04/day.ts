@@ -1,4 +1,4 @@
-import { range, readInput } from '../utils.js';
+import { readInput } from '../utils.js';
 
 interface Range {
   start: number;
@@ -66,36 +66,17 @@ function hasOverlappingAssignment(line: string): boolean {
   const firstRange = parseRange(pairs[0]);
   const secondRange = parseRange(pairs[1]);
 
-  const firstRangeSet = rangeToSet(firstRange);
-  const secondRangeSet = rangeToSet(secondRange);
-
   return (
-    isRangeSetOverlapping(firstRangeSet, secondRangeSet) ||
-    isRangeSetOverlapping(secondRangeSet, firstRangeSet)
+    isRangeOverlapping(firstRange, secondRange) ||
+    isRangeOverlapping(secondRange, firstRange)
   );
 }
 
-function rangeToSet(givenRange: Range): Set<number> {
-  return new Set(
-    range(givenRange.end - givenRange.start + 1, givenRange.start)
-  );
-}
-
-function isRangeSetOverlapping(
-  thisRange: Set<number>,
-  otherRange: Set<number>
-) {
-  for (
-    let iterator = thisRange.values(), val = null;
-    (val = iterator.next().value);
-
-  ) {
-    if (otherRange.has(val)) {
-      return true;
-    }
-  }
-
-  return false;
+function isRangeOverlapping(thisRange: Range, otherRange: Range) {
+  // Check for an intersection
+  const min = thisRange.start < otherRange.start ? thisRange : otherRange;
+  const max = min === thisRange ? otherRange : thisRange;
+  return !(min.end < max.start);
 }
 
 export { run };
