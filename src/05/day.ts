@@ -15,12 +15,14 @@ interface Command {
 async function run(args: string[]): Promise<void> {
   const content = await readInput('src/05/input.txt');
   const input = parseInput(content);
-  const finishedStacks = executeInput(input);
-  const message = parseMessage(finishedStacks);
-  // console.log(input);
-  // console.log(finishedStacks);
+  const finishedStacksPart1 = executeInputPart1(input);
+  const messagePart1 = parseMessage(finishedStacksPart1);
 
-  console.log(`(Part 1): The top crates are '${message}'.`);
+  const finishedStacksPart2 = executeInputPart2(input);
+  const messagePart2 = parseMessage(finishedStacksPart2);
+
+  console.log(`(Part 1): The top crates are '${messagePart1}'.`);
+  console.log(`(Part 2): The top crates are '${messagePart2}'.`);
 }
 
 function parseInput(content: string[]): Input {
@@ -40,7 +42,6 @@ function parseStacks(stacksRaw: string[]): string[][] {
     }
     return chunk;
   });
-  // console.log(transposeStacks);
 
   const width = transposeStacks[0].length;
   const height = transposeStacks.length;
@@ -74,7 +75,7 @@ function parseCommands(lines: string[]): Command[] {
   });
 }
 
-function executeInput(input: Input): string[][] {
+function executeInputPart1(input: Input): string[][] {
   const stacks = structuredClone(input.stacks);
   for (let i = 0; i < input.commands.length; i++) {
     const command = input.commands[i];
@@ -84,6 +85,18 @@ function executeInput(input: Input): string[][] {
       const crate = from.shift() as string;
       to.unshift(crate);
     }
+  }
+  return stacks;
+}
+
+function executeInputPart2(input: Input): string[][] {
+  const stacks = structuredClone(input.stacks);
+  for (let i = 0; i < input.commands.length; i++) {
+    const command = input.commands[i];
+    const from = stacks[command.from - 1];
+    const to = stacks[command.to - 1];
+    const crates = from.splice(0, command.amount);
+    to.unshift(...crates);
   }
   return stacks;
 }
