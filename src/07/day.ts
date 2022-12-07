@@ -35,6 +35,7 @@ async function run(args: string[]): Promise<void> {
   const actions = parseInput(content);
   const fileTree = buildFileTree(actions);
   printTree(fileTree);
+  // Part 1
   const part1Directories = findDirectoriesLessThan(fileTree, 100_000);
   const sumOfDirectories = part1Directories.reduce(
     (sum, file): number => sum + file.fileSize,
@@ -42,6 +43,13 @@ async function run(args: string[]): Promise<void> {
   );
   console.log(
     `(Part 1): The sum of all the directories with size under 100_000 is '${sumOfDirectories}'`
+  );
+  // Part 2
+  const neededSpace = 30_000_000 - (70_000_000 - fileTree.fileSize);
+  const directoryToDelete = findMinimalDirectoryToDelete(fileTree, neededSpace);
+
+  console.log(
+    `(Part 2): The total size of the directory to delete to free ${neededSpace} is '${directoryToDelete.fileSize}'`
   );
 }
 
@@ -218,12 +226,35 @@ function findDirectoriesLessThan(
   root: VirtualFile,
   threshold: number
 ): VirtualFile[] {
+  return findDirectories(
+    root,
+    threshold,
+    (size, threshold) => size <= threshold
+  );
+}
+
+function findDirectoriesGreaterThan(
+  root: VirtualFile,
+  threshold: number
+): VirtualFile[] {
+  return findDirectories(
+    root,
+    threshold,
+    (size, threshold) => size >= threshold
+  );
+}
+
+function findDirectories(
+  root: VirtualFile,
+  threshold: number,
+  filterFunc: (size: number, threshold: number) => boolean
+) {
   // We want to exlcude the root in the calculation
   const queue = [...root.files.values()].filter((file) => file.isDir);
   const result: VirtualFile[] = [];
   let element;
   while ((element = queue.shift())) {
-    if (element.fileSize <= threshold) {
+    if (filterFunc(element.fileSize, threshold)) {
       result.push(element);
     }
     const newElements = [...element.files.values()].filter(
@@ -232,6 +263,21 @@ function findDirectoriesLessThan(
     queue.push(...newElements);
   }
   return result;
+}
+
+function findMinimalDirectoryToDelete(
+  root: VirtualFile,
+  needFreeSpace: number
+): VirtualFile {
+  const possibleDirectories = findDirectoriesGreaterThan(root, needFreeSpace);
+
+  // Find the smalles possible directory
+  return possibleDirectories.reduce(
+    (curMin: VirtualFile, file: VirtualFile): VirtualFile => {
+      return file.fileSize <= curMin.fileSize ? file : curMin;
+    },
+    root
+  );
 }
 
 export { run };
