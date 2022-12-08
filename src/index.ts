@@ -5,6 +5,7 @@ import { run as day4 } from './04/day.js';
 import { run as day5 } from './05/day.js';
 import { run as day6 } from './06/day.js';
 import { run as day7 } from './07/day.js';
+import { run as day8 } from './08/day.js';
 
 const day = Number.parseInt(process.argv[2]);
 const args = process.argv.slice(3);
@@ -31,6 +32,9 @@ switch (day) {
     break;
   case 7:
     await day7(args);
+    break;
+  case 8:
+    await day8(args);
     break;
   default:
     console.warn('Not yet implemented');
