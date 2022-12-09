@@ -20,4 +20,29 @@ function chunk<T>(array: Array<T>, chunkSize: number): Array<Array<T>> {
   return chunks;
 }
 
-export { readInput, range, chunk };
+interface Equatable {
+  /**
+   * Returns `true` if the two objects are equal, `false` otherwise.
+   */
+  equals(object: any): boolean;
+}
+
+class SetCustomEquals<T extends Equatable> extends Set<T> {
+  add(value: T) {
+    if (!this.has(value)) {
+      super.add(value);
+    }
+    return this;
+  }
+
+  has(otherValue: T): boolean {
+    for (const value of this.values()) {
+      if (otherValue.equals(value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+export { readInput, range, chunk, Equatable, SetCustomEquals };
