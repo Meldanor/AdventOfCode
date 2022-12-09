@@ -82,7 +82,7 @@ function countPositionsTailVisitedOnce(
     rope.push(new Point(0, 0));
   }
 
-  const visitedPoints: Point[] = [];
+  const visitedPoints = new SetCustomEquals();
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i];
     for (let move = 0; move < command.moves; move++) {
@@ -99,12 +99,11 @@ function countPositionsTailVisitedOnce(
       //   `(${rope.at(-1)!.x},${rope.at(-1)!.y})`
       // );
 
-      visitedPoints.push(rope.at(-1)!);
+      visitedPoints.add(rope.at(-1)!);
     }
   }
 
-  const uniquePoints = new SetCustomEquals(visitedPoints);
-  return uniquePoints.size;
+  return visitedPoints.size;
 }
 
 function moveHead(curHeadPos: Point, direction: Direction): Point {
