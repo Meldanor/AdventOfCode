@@ -1,5 +1,5 @@
 import { posix } from 'path';
-import { Equatable, readInput, SetCustomEquals } from '../utils.js';
+import { Equatable, range, readInput, SetCustomEquals } from '../utils.js';
 
 interface Direction {
   xD: number;
@@ -45,10 +45,20 @@ async function run(args: string[]): Promise<void> {
   const content = await readInput('src/09/input.txt');
   const commands = parseContent(content);
 
-  const positionsTailVisitedOnce = countPositionsTailVisitedOnce(commands);
+  const positionsTailVisitedOncePart1 = countPositionsTailVisitedOnce(
+    commands,
+    1
+  );
 
   console.log(
-    `(Part 1): The tail visited '${positionsTailVisitedOnce}' positions at least once.`
+    `(Part 1): The tail of rope length 1 visited '${positionsTailVisitedOncePart1}' positions at least once.`
+  );
+  const positionsTailVisitedOncePart2 = countPositionsTailVisitedOnce(
+    commands,
+    9
+  );
+  console.log(
+    `(Part 2): The tail of rope length 9 visited '${positionsTailVisitedOncePart2}' positions at least once.`
   );
 }
 
@@ -62,22 +72,34 @@ function parseContent(content: string[]): Command[] {
   });
 }
 
-function countPositionsTailVisitedOnce(commands: Command[]): number {
-  let curHeadPos = new Point(0, 0);
-  let curTailPos = new Point(0, 0);
-  const visitedPoints: Point[] = [curTailPos];
+function countPositionsTailVisitedOnce(
+  commands: Command[],
+  ropeLength: number
+): number {
+  const rope: Point[] = [new Point(0, 0)];
+  // Add knots
+  for (let i = 0; i < ropeLength; i++) {
+    rope.push(new Point(0, 0));
+  }
+
+  const visitedPoints: Point[] = [];
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i];
     for (let move = 0; move < command.moves; move++) {
-      curHeadPos = moveHead(curHeadPos, command.direction);
-      curTailPos = moveTail(curHeadPos, curTailPos);
+      rope[0] = moveHead(rope[0], command.direction);
+      for (let ropeIndex = 1; ropeIndex < rope.length; ropeIndex++) {
+        const prev = rope[ropeIndex - 1];
+        const knot = rope[ropeIndex];
+        rope[ropeIndex] = moveTail(prev, knot);
+      }
       // console.log(
       //   'head:',
-      //   `(${curHeadPos.x},${curHeadPos.y})`,
+      //   `(${rope[0].x},${rope[0].y})`,
       //   'tail:',
-      //   `(${curTailPos.x},${curTailPos.y})`
+      //   `(${rope.at(-1)!.x},${rope.at(-1)!.y})`
       // );
-      visitedPoints.push(curTailPos);
+
+      visitedPoints.push(rope.at(-1)!);
     }
   }
 
