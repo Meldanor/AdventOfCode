@@ -16,6 +16,9 @@ async function run(args: string[]): Promise<void> {
   console.log(
     `(Part 1): There are '${visibleTrees}' trees visible from outside the grid`
   );
+
+  const bestScenicScore = findBestScenicScore(matrix);
+  console.log(`(Part 2): The highest scenic score is '${bestScenicScore}'`);
 }
 
 function parseContent(lines: string[]): Matrix {
@@ -92,6 +95,58 @@ function isTreeVisibleFromOutsideGrid(
   if (!hasBigger) return true;
 
   return false;
+}
+
+function findBestScenicScore(matrix: Matrix): number {
+  let bestScenicScore = Number.MIN_VALUE;
+  for (let x = 0; x < matrix.width; x++) {
+    for (let y = 0; y < matrix.height; y++) {
+      const curScenicScore = calculateScenicScore(x, y, matrix);
+      if (curScenicScore > bestScenicScore) {
+        bestScenicScore = curScenicScore;
+      }
+    }
+  }
+  return bestScenicScore;
+}
+
+function calculateScenicScore(x: number, y: number, matrix: Matrix): number {
+  const tree = getPoint(x, y, matrix)!;
+  let countLeft = 0;
+  // Check left
+  for (let x1 = x - 1; x1 >= 0; x1--) {
+    countLeft += 1;
+    if (getPoint(x1, y, matrix)! >= tree) {
+      break;
+    }
+  }
+
+  let countRight = 0;
+  // Check Right
+  for (let x1 = x + 1; x1 < matrix.width; x1++) {
+    countRight += 1;
+    if (getPoint(x1, y, matrix)! >= tree) {
+      break;
+    }
+  }
+
+  let countTop = 0;
+  for (let y1 = y - 1; y1 >= 0; y1--) {
+    countTop += 1;
+    if (getPoint(x, y1, matrix)! >= tree) {
+      break;
+    }
+  }
+
+  let countBottom = 0;
+  for (let y1 = y + 1; y1 < matrix.height; y1++) {
+    countBottom += 1;
+    if (getPoint(x, y1, matrix)! >= tree) {
+      break;
+    }
+  }
+
+  return countLeft * countRight * countTop * countBottom;
 }
 
 export { run };
