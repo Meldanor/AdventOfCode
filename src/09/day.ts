@@ -1,5 +1,4 @@
-import { posix } from 'path';
-import { Equatable, range, readInput, SetCustomEquals } from '../utils.js';
+import { Equatable, readInput, SetCustomEquals } from '../utils.js';
 
 interface Direction {
   xD: number;
