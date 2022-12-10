@@ -33,10 +33,15 @@ interface Cpu {
 async function run(args: string[]): Promise<void> {
   const content = await readInput('src/10/input.txt');
   const commands = parseContent(content);
-  const sumOfSignals = part1SumOfSignalStrengths(
+  console.log(`(Part 2): The CRT displays this: `);
+
+  const sumOfSignals = executeCommands(
     commands,
     new Set([20, 60, 100, 140, 180, 220])
   );
+  console.log();
+  console.log();
+
   console.log(`(Part 1): The sum of the six signals is ${sumOfSignals}`);
 }
 
@@ -52,7 +57,7 @@ function parseContent(content: string[]): Command[] {
   });
 }
 
-function part1SumOfSignalStrengths(
+function executeCommands(
   commands: Command[],
   cyclesToSumSignal: Set<number>
 ): number {
@@ -60,16 +65,14 @@ function part1SumOfSignalStrengths(
   let sum = 0;
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i];
-    // console.log('command:', command, 'cpu:', cpu);
 
     for (let cycle = 1; cycle <= command.operation.cycles; cycle++) {
+      printToCrt(cpu);
       cpu.currentCycle += 1;
       if (cyclesToSumSignal.has(cpu.currentCycle)) {
         sum += cpu.currentCycle * cpu.registerX;
       }
-
       cpu = executeCommand(command, cpu, cycle);
-      // console.log(cpu);
     }
   }
 
@@ -90,6 +93,23 @@ function executeCommand(command: Command, cpu: Cpu, curCycle: number): Cpu {
     }
   } else {
     throw new Error(`Unsupported command '${command}'`);
+  }
+}
+
+function printToCrt(cpu: Cpu): void {
+  const crtHorizontalPosition = cpu.currentCycle % 40;
+  if (crtHorizontalPosition === 0) {
+    process.stdout.write('\n');
+  }
+  const spriteMiddle = cpu.registerX;
+  if (
+    crtHorizontalPosition === spriteMiddle ||
+    crtHorizontalPosition - 1 === spriteMiddle ||
+    crtHorizontalPosition + 1 === spriteMiddle
+  ) {
+    process.stdout.write('#');
+  } else {
+    process.stdout.write('.');
   }
 }
 
