@@ -20,6 +20,19 @@ function chunk<T>(array: Array<T>, chunkSize: number): Array<Array<T>> {
   return chunks;
 }
 
+function chunkWithGap<T>(
+  array: Array<T>,
+  chunkSize: number,
+  gap: number
+): Array<Array<T>> {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize + gap) {
+    const chunk = array.slice(i, i + chunkSize);
+    chunks.push(chunk);
+  }
+  return chunks;
+}
+
 interface Equatable {
   /**
    * Returns `true` if the two objects are equal, `false` otherwise.
@@ -45,4 +58,4 @@ class SetCustomEquals<T extends Equatable> extends Set<T> {
   }
 }
 
-export { readInput, range, chunk, Equatable, SetCustomEquals };
+export { readInput, range, chunk, chunkWithGap, Equatable, SetCustomEquals };
