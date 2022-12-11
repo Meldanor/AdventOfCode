@@ -51,15 +51,14 @@ class MultiplicationWorryOperation implements WorryOperation {
 async function run(args: string[]): Promise<void> {
   const content = await readInput('src/11/input.txt');
   const monkeys = parseContent(content);
-  const monkeyBusiness = calculcateMonkeyBusines(monkeys, 20);
+  let monkeyBusiness = calculcateMonkeyBusines(monkeys, 20, true);
   console.log(
     `(Part 1): The level of monkey business after 20 rounds is '${monkeyBusiness}'`
   );
-
-  // for (let i = 0; i < monkeys.length; i++) {
-  //   const element = monkeys[i];
-  //   console.log(element);
-  // }
+  monkeyBusiness = calculcateMonkeyBusines(monkeys, 10_000, false);
+  console.log(
+    `(Part 2): The level of monkey business after 10_000 rounds is '${monkeyBusiness}'`
+  );
 }
 
 function parseContent(content: string[]): Monkey[] {
@@ -108,9 +107,18 @@ function parseitems(line: string): number[] {
   return line.split(': ')[1].split(', ').map(Number);
 }
 
-function calculcateMonkeyBusines(monkeys: Monkey[], rounds: number): number {
+function calculcateMonkeyBusines(
+  monkeys: Monkey[],
+  rounds: number,
+  part1: boolean
+): number {
+  // Stress level reducer
+  const m = monkeys.reduce(
+    (product, monkey) => product * monkey.test.divisibleBy,
+    1
+  );
   for (let round = 1; round <= rounds; round++) {
-    runRound(monkeys);
+    runRound(monkeys, m, part1);
   }
   const inspectedItemsRanking = monkeys
     .map((monkey) => monkey.inspectedItems)
@@ -119,16 +127,21 @@ function calculcateMonkeyBusines(monkeys: Monkey[], rounds: number): number {
   return inspectedItemsRanking.at(-1)! * inspectedItemsRanking.at(-2)!;
 }
 
-function runRound(monkeys: Monkey[]): void {
+function runRound(monkeys: Monkey[], m: number, part1: boolean): void {
   for (let i = 0; i < monkeys.length; i++) {
     const monkey = monkeys[i];
     // console.log(`Monkey ${monkey.index}:`);
 
-    inspectItems(monkey, monkeys);
+    inspectItems(monkey, monkeys, m, part1);
   }
 }
 
-function inspectItems(inspector: Monkey, monkeys: Monkey[]): void {
+function inspectItems(
+  inspector: Monkey,
+  monkeys: Monkey[],
+  m: number,
+  part1: boolean
+): void {
   const items = inspector.items;
   while (items.length > 0) {
     let item = items.shift()!;
@@ -140,7 +153,13 @@ function inspectItems(inspector: Monkey, monkeys: Monkey[]): void {
     // console.log(`    Worry level calculated by is now ${item}`);
 
     // Reduce stress by 3
-    item = Math.floor(item / 3);
+    if (part1) {
+      item = Math.floor(item / 3);
+    }
+    //
+    else {
+      item = item % m;
+    }
     // console.log(
     //    `    Monkey gets bored. Worry Level is divided by 3 to ${item}`
     // );
