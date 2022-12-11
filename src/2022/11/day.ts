@@ -1,4 +1,4 @@
-import { chunkWithGap, readInput } from '../utils.js';
+import { chunkWithGap } from '../../utils.js';
 
 interface Monkey {
   index: number;
@@ -47,9 +47,7 @@ class MultiplicationWorryOperation implements WorryOperation {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/11/input.txt');
+function run(content: string[]): void {
   const monkeys = parseContent(content);
   let monkeyBusiness = calculcateMonkeyBusines(monkeys, 20, true);
   console.log(

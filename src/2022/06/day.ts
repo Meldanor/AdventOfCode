@@ -1,9 +1,4 @@
-import { readInput } from '../utils.js';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/06/input.txt');
-
+function run(content: string[]): void {
   console.log(
     `(Part 1): The first start-of-packet marker is after '${findFirsStartOfPacketMarker(
       content[0],

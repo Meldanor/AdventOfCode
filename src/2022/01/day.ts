@@ -1,13 +1,9 @@
-import { readInput } from '../utils.js';
-
 interface Accumulator {
   all: string[][];
   current: string[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/01/input.txt');
+function run(content: string[]): void {
   const groups = content.reduce(
     (accumulator: Accumulator, currentValue: string) => {
       if (currentValue === '') {

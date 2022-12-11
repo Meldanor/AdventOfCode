@@ -1,5 +1,3 @@
-import { readInput } from '../utils.js';
-
 enum Executable {
   CD = 'cd',
   LS = 'ls'
@@ -29,9 +27,7 @@ interface VirtualFile {
   parent?: VirtualFile;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/07/input.txt');
+function run(content: string[]): void {
   const actions = parseInput(content);
   const fileTree = buildFileTree(actions);
   printTree(fileTree);

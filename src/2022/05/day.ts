@@ -1,5 +1,3 @@
-import { readInput } from '../utils.js';
-
 interface Input {
   stacks: string[][];
   commands: Command[];
@@ -11,9 +9,7 @@ interface Command {
   to: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/05/input.txt');
+function run(content: string[]): void {
   const input = parseInput(content);
   const finishedStacksPart1 = executeInputPart1(input);
   const messagePart1 = parseMessage(finishedStacksPart1);

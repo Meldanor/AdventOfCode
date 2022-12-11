@@ -1,14 +1,10 @@
-import { readInput } from '../utils.js';
-
 interface Matrix {
   values: number[];
   width: number;
   height: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/08/input.txt');
+function run(content: string[]): void {
   const matrix = parseContent(content);
   console.log(matrix);
   const visibleTrees = countVisibleTreeFromOutsideGrid(matrix);

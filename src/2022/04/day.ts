@@ -1,13 +1,9 @@
-import { readInput } from '../utils.js';
-
 interface Range {
   start: number;
   end: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/04/input.txt');
+function run(content: string[]): void {
   // Part 1
   const redundantAssignments = content.reduce(
     (acc: number, line: string): number => {

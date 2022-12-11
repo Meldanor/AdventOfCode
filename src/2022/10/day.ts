@@ -1,5 +1,3 @@
-import { readInput } from '../utils.js';
-
 enum OperationType {
   ADDX = 'addx',
   NOOP = 'noop'
@@ -29,9 +27,7 @@ interface Cpu {
   currentCycle: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/10/input.txt');
+function run(content: string[]): void {
   const commands = parseContent(content);
   console.log(`(Part 2): The CRT displays this: `);
 

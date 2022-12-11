@@ -1,4 +1,4 @@
-import { readInput, chunk, range } from '../utils.js';
+import { chunk, range } from '../../utils.js';
 
 type PriorityMap = {
   [key: string]: number;
@@ -17,9 +17,7 @@ const priorityValues = range(52)
     return acc;
   }, {});
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/03/input.txt');
+function run(content: string[]): void {
   // Part 1
   const sumOfPriorities = content.reduce(
     (acc: number, line: string): number => {

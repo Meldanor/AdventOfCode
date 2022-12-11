@@ -1,4 +1,4 @@
-import { Equatable, readInput, SetCustomEquals } from '../utils.js';
+import { Equatable, SetCustomEquals } from '../../utils.js';
 
 interface Direction {
   xD: number;
@@ -39,9 +39,7 @@ class Point implements Equatable {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/09/input.txt');
+function run(content: string[]): void {
   const commands = parseContent(content);
 
   const positionsTailVisitedOncePart1 = countPositionsTailVisitedOnce(

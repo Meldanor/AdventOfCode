@@ -1,5 +1,3 @@
-import { readInput } from '../utils.js';
-
 enum OTHERS_CHOICE {
   ROCK = 'A',
   PAPER = 'B',
@@ -74,9 +72,7 @@ const strategy: StrategyMap = {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function run(args: string[]): Promise<void> {
-  const content = await readInput('src/02/input.txt');
+function run(content: string[]): void {
   const totalScorePartOne = content.reduce(
     (acc: number, line: string): number => {
       return acc + calculatePartOneOutcome(line);
